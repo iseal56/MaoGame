@@ -1,5 +1,6 @@
 package me.iseal.Logging;
 
+import me.iseal.Utils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.builder.api.*;
@@ -13,6 +14,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class createXMLFile {
+    Utils utils = new Utils();
+
     public InputStream createXMLFile(){
         ConfigurationBuilder<BuiltConfiguration> builder
                 = ConfigurationBuilderFactory.newConfigurationBuilder();
@@ -39,7 +42,7 @@ public class createXMLFile {
         try {
             builder.writeXmlConfiguration(out);
         } catch (IOException e) {
-            e.printStackTrace();
+            utils.handleException(e);
         }
         is = new ByteArrayInputStream(out.toByteArray());
         Configurator.initialize(builder.build());

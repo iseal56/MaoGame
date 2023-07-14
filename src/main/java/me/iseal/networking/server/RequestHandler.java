@@ -1,5 +1,6 @@
 package me.iseal.networking.server;
 
+import me.iseal.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,6 +17,7 @@ public class RequestHandler extends Thread{
     private Logger l = LogManager.getRootLogger();
     private BufferedReader in;
     private PrintWriter out;
+    Utils utils = new Utils();
     private final ProcessMessages pm = new ProcessMessages();
 
     public RequestHandler(Socket socket){
@@ -27,6 +29,7 @@ public class RequestHandler extends Thread{
             System.out.println("Received a connection");
             l.info("Received a connection");
             s.setKeepAlive(true);
+            s.setSoTimeout(10000);
             l.info("Keepalive set to true");
             l.info("Getting streams...");
             in = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -35,19 +38,14 @@ public class RequestHandler extends Thread{
             System.out.println("Connection initialized");
             readMessages();
         } catch (Exception e) {
-            l.error(e.getMessage());
-            for (StackTraceElement el : e.getStackTrace()) {
-                l.error(el);
-            }
-            System.out.println("The program encountered an error and needs to exit. Check logs for more information.");
-            System.exit(-1);
+            utils.handleException(e);
         }
     }
 
     public void readMessages() throws IOException {
         String line = in.readLine();
         while (line != null && line.length() > 0) {
-            pm.process(line);
+            pm.process(line,s);
             line = in.readLine();
         }
     }

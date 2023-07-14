@@ -1,5 +1,6 @@
 package me.iseal.networking.server;
 
+import me.iseal.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,6 +12,7 @@ import java.net.Socket;
 public class StartServer extends Thread {
 
     ServerSocket ss;
+    Utils utils = new Utils();
     Logger l = LogManager.getRootLogger();
 
     public void run(){
@@ -21,28 +23,20 @@ public class StartServer extends Thread {
         try {
             ss = new ServerSocket(80);
         } catch (Exception e){
-            l.error(e.getMessage());
-            for (StackTraceElement el : e.getStackTrace()){
-                l.error(el);
-            }
-            System.out.println("The program encountered an error and needs to exit. Check logs for more information.");
-            System.exit(-1);
+            utils.handleException(e);
         }
     }
 
     private void receiveMessages(){
         try {
             System.out.println("Started server");
-            Socket socket = ss.accept();
-            RequestHandler requestHandler = new RequestHandler(socket);
-            requestHandler.start();
-        } catch (Exception e){
-            l.error(e.getMessage());
-            for (StackTraceElement el : e.getStackTrace()){
-                l.error(el);
+            while (true) {
+                Socket socket = ss.accept();
+                RequestHandler requestHandler = new RequestHandler(socket);
+                requestHandler.start();
             }
-            System.out.println("The program encountered an error and needs to exit. Check logs for more information.");
-            System.exit(-1);
+        } catch (Exception e){
+            utils.handleException(e);
         }
     }
 

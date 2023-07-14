@@ -1,5 +1,7 @@
 package me.iseal.Logging;
 
+import me.iseal.Utils;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,6 +12,7 @@ import java.util.Properties;
 
 public class LoggerManager {
 
+    Utils utils = new Utils();
     private static final int DEFAULT_BUFFER_SIZE = 8192;
     File masterFolder = new File(System.getProperty("user.home")+"\\MaoGame\\");
 
@@ -18,7 +21,7 @@ public class LoggerManager {
         try {
             createProprietiesFile();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            utils.handleException(e);
         }
     }
 
@@ -31,7 +34,7 @@ public class LoggerManager {
         try {
             f2.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            utils.handleException(e);
         }
     }
 
@@ -50,7 +53,7 @@ public class LoggerManager {
             f.mkdirs();
             f2.createNewFile();
         } catch(Exception e){
-            e.printStackTrace();
+            utils.handleException(e);
         }
         InputStream is2 = null;
         try {
@@ -58,7 +61,7 @@ public class LoggerManager {
             is2 = new FileInputStream(f2);
             prop.load(is2);
         } catch (IOException e) {
-            e.printStackTrace();
+            utils.handleException(e);
         }
     }
 

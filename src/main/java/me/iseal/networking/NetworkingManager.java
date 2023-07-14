@@ -1,5 +1,6 @@
 package me.iseal.networking;
 
+import me.iseal.networking.client.ClientMessage;
 import me.iseal.networking.client.StartClient;
 import me.iseal.networking.server.StartServer;
 import org.apache.logging.log4j.LogManager;
@@ -24,6 +25,10 @@ public class NetworkingManager {
     public void startServer(int port){
         ss = new StartServer(port);
         ss.start();
+    }
+
+    public void sendClientMessage(ClientMessage msg){
+        sc.sendMessage(msg);
     }
 
     public void addClient(Socket s){
